@@ -12,8 +12,6 @@ import numpy as np
 app = Flask(__name__)
 
 
-
-
 # Set API key
 quandl.ApiConfig.api_key = "sfvyrsyZzjsQaacndRPV"
 
@@ -22,20 +20,26 @@ data = quandl.get_table('WIKI/PRICES', paginate=True, date = { 'gte': '2018-01-0
 
 # options 
 price_type_list = ['open','close','adj_open','adj_close']
-colormap = all_palettes['Viridis'][len(price_type_list)]
-colordict=dict()
-for i, price_type in enumerate(price_type_list):
-	colordict[price_type] = colormap[i]
-	
 
+	
 def datetime(x):
     return np.array(x, dtype=np.datetime64)
+
+def getcolordict(price_type_list):
+	colormap = all_palettes['Viridis'][len(price_type_list)]
+	colordict=dict()
+	for i, price_type in enumerate(price_type_list):
+		colordict[price_type] = colormap[i]
+	return colordict
 
 def create_figure(price_type_list):
 	p=figure(x_axis_type='datetime', title='Quandl WIKI EOD Stock Prices')
 	p.grid.grid_line_alpha=0.3
 	p.xaxis.axis_label='Date'
 	p.yaxis.axis_label='Stock Price'
+	
+	colordict= getcolordict(price_type_list)
+	
 	tickers=['GOOG']
 	for ticker in tickers:
 		df = data[data['ticker']==ticker]
@@ -66,6 +70,6 @@ def about():
 	return render_template('about.html')
 
 if __name__ == '__main__':
-	#app.run(port=33507, debug=True)
-	p=create_figure(price_type_list)
-	show(p)
+	app.run(port=33507, debug=True)
+	#p=create_figure(price_type_list)
+	#show(p)
