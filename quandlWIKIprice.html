@@ -1,0 +1,34 @@
+<html>
+<head>
+<link
+    href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css"
+    rel="stylesheet" type="text/css">
+<link
+    href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.css"
+    rel="stylesheet" type="text/css">
+
+<script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
+<script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
+
+</head>
+<body>
+<H1>Quandl WIKI Prices</H1>
+
+<form action="/">
+<select name="price_type_list">
+	{% for price_type in price_type_list %}
+		{% if price_type == current_pricetype %}
+			<option selected value="{{ price_type }}">{{ price_type }}</option> 
+		{% else %} 
+			<option value="{{ price_type }}">{{ price_type }}</option> 
+		{% endif %}
+	{% endfor %}
+</select>
+<input type="submit">
+</form>
+
+{{ script|safe }}
+{{ div|safe }}
+
+</body>
+</html>
