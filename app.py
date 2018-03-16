@@ -18,13 +18,13 @@ app = Flask(__name__)
 quandl.ApiConfig.api_key = "sfvyrsyZzjsQaacndRPV"
 
 # Load data set via quandl python api
-data = quandl.get_table('WIKI/PRICES', paginate=True, date = { 'gte': '2018-01-01', 'lte': '2018-03-14' })
+data = quandl.get_table('WIKI/PRICES', paginate=True, date = { 'gte': '2018-01-01', 'lte': '2018-03-15' })
 
 # options 
 price_type_list = ['open','close','adj_open','adj_close']
-colormap = all_palettes['Viridis'][len(options)]
+colormap = all_palettes['Viridis'][len(price_type_list)]
 colordict=dict()
-for i, price_type in price_type_list:
+for i, price_type in enumerate(price_type_list):
 	colordict[price_type] = colormap[i]
 	
 
@@ -40,10 +40,8 @@ def create_figure(price_type_list):
 	for ticker in tickers:
 		df = data[data['ticker']==ticker]
 		for price_type in price_type_list:
-			p.line(x=datetime(df['date']), y=df[col], color=colordict[price_type], legend=ticker+': '+price_type)
-	
+			p.line(x=datetime(df['date']), y=df[price_type], color=colordict[price_type], legend=ticker+': '+price_type)
 	p.legend.location='top_left'
-	
 	return p
 
 
@@ -68,4 +66,6 @@ def about():
 	return render_template('about.html')
 
 if __name__ == '__main__':
-	app.run(port=33507, debug=True)
+	#app.run(port=33507, debug=True)
+	p=create_figure(price_type_list)
+	show(p)
