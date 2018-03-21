@@ -1,0 +1,5 @@
+Ticker Symbol: dfs
+open: 1
+close: 0
+adj_open: 1
+adj_close: 0
