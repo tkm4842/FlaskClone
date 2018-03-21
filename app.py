@@ -110,7 +110,11 @@ def index():
 
 
 if __name__ == '__main__':
+
+
 	app.run()
+
+
 	'''
 	app_vars={'tickersymbol': 'GOOG','open':1,'close':1,'adj_open':1,'adj_close':1}
 	ticker = app_vars['tickersymbol']
