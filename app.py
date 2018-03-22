@@ -9,13 +9,16 @@ from bokeh.io import output_notebook
 from bokeh.embed import components
 from bokeh.resources import INLINE
 import numpy as np
+import datetime as dt
 
+import os
+from os import environ
 
 app = Flask(__name__)
 
 
-# Set API key
-quandl.ApiConfig.api_key = "sfvyrsyZzjsQaacndRPV"
+# API key is set as config var in Heroku. To run locally, pull config vars from Heroku as .env file.
+quandl.ApiConfig.api_key = os.environ['quandl_API_key']
 
 # options 
 price_type_list = ['open','close','adj_open','adj_close']
@@ -29,7 +32,7 @@ def get_data(app_vars):
 		if option!='tickersymbol' and app_vars[option]==1:
 			columns.append(option)
 
-	data =  quandl.get_table('WIKI/PRICES', paginate=True,qopts = { 'columns': columns}, date = { 'gte': '2018-03-01', 'lte': '2018-03-20' }, ticker=ticker)
+	data =  quandl.get_table('WIKI/PRICES', paginate=True,qopts = { 'columns': columns}, date = { 'gte': '2018-03-01', 'lte': str(dt.datetime.now().strftime("%Y-%m-%d")) }, ticker=ticker)
 
 	return data
 	
@@ -58,6 +61,11 @@ def create_figure(data, ticker):
 			p.line(x=datetime(df['date']), y=df[col], color=colordict[col], legend=ticker+': '+col)
 	p.legend.location='top_left'
 	return p
+
+
+@app.route('/')
+def hello():
+    return redirect('/index')
 
 
 @app.route('/index',methods=['GET','POST'])
@@ -113,7 +121,6 @@ if __name__ == '__main__':
 
 
 	app.run()
-
 
 	'''
 	app_vars={'tickersymbol': 'GOOG','open':1,'close':1,'adj_open':1,'adj_close':1}
